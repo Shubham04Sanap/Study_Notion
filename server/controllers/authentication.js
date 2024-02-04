@@ -177,3 +177,18 @@ exports.login = async (req,res) =>{
     })
   }
 }
+
+exports.changePassword = async(req, res)=>{
+  const {newPassword, oldPassword} = req.body;
+
+  if(newPassword !==  oldPassword){
+    res.status(401).json({
+      message:"New password cannot be the same"
+    })
+  }
+  const updatedPassword = await User.updateOne({
+    password
+  },{$set:{password:newPassword}});
+
+  
+}
