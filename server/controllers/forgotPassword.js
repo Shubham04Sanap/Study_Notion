@@ -1,7 +1,8 @@
 const User = require("../models/user");
 const mailSender = require("../utils/mailSender");
+const bcrypt = require("bcrypt");
 
-exports.forgotPassword = async(req,res)=>{
+exports.forgotPasswordToken = async(req,res)=>{
   try{
   const email = req.body.email;
   const user = await User.findOne({email:email});
@@ -35,6 +36,52 @@ exports.forgotPassword = async(req,res)=>{
     res.status(500).json({
       success:false,
       message:"email couldn't be sent",
+    })
+  }
+}
+
+exports.updatePassword = async(req,res) =>{
+  try{
+    const {password, confirmPassword, token} = req.body;
+    if(password !== confirmPassword){
+      res.json({
+        success:false,
+        message:"password didn't matched"
+      })
+    }
+    const userDetails = await User.findOne({token:token})
+
+    if(!userDetails){
+      res.json({
+        success:false,
+        message:"token is invalid",
+      })
+    }
+
+    if(userDetails.forgotPasswordExpires < Date.now()){
+      return res.json({
+        success:false,
+        message:"Token got expired!",
+      })
+    }
+
+    const hashedPassword = await bcrypt.hash(password,10);
+
+    await User.findOneAndUpdate(
+      {toke:token},
+      {password:hashedPassword},
+      {new:true}
+    );
+
+    res.status(200).json({
+      success:true,
+      message:"Password changed successfully"
+    })
+  }catch(error){
+    console.error(error);
+    res.status(500).json({
+      success:false,
+      message:"Password didn't got updated"
     })
   }
 }
