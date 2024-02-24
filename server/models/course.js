@@ -15,6 +15,9 @@ const courseSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Section",
   },
+  whatYouWillLearn:{
+    type:String,
+  },
   ratingAndReview: [
     {
       type: mongoose.Schema.Types.ObjectId,
