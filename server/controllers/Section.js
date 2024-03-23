@@ -39,3 +39,47 @@ async function createSection (req,res){
 }
 
 export default createSection;
+
+exports.updateSection = async (req,res){
+  try{
+    //data input
+    const {sectionName, sectionId} = req.body;
+    //data validation
+    if(!sectionName || !sectionId){
+      return res.status(400).json({
+        success:false,
+        message:"missing properties",
+      })
+    }
+    //update data
+    const section = await Section.findByIdAndUpdate(sectionId, {sectionName}, {new:true});
+
+    return res.status(200).json({
+      success:true,
+      message:"section got updated,"
+    })
+  }catch{
+    console.log(error);
+    return res.status(500).json({
+      success:false,
+      message:"Couldn't update section"
+    })
+  }
+}
+
+exports.deleteSection = async(req, res)=>{
+  try{
+    const {secID} = req.body;
+    await Section.findByIdAndDelete(secID);
+
+    return res.status(200).json({
+      success:true,
+      message:"section deleted successfully",
+    })
+  }catch{
+    return res.status(500).json({
+      success:false,
+      message:"Couldn't delete section"
+    })
+  }
+}
