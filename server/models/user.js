@@ -28,6 +28,11 @@ const userSchema = new mongoose.Schema({
     type:String,
     enum:["Admin","Student","Instrcutor"],
   },
+  profileDetails: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "Profile"
+  },
   token:{
     type:String,
   },
