@@ -60,6 +60,9 @@ exports.deleteAccount = async(req,res) =>{
       message:"user deleted successfully"
     })
   }catch(error){
-
+    return res.status(500).json({
+      success:false,
+      message: "not able to delete profle"
+    })
   }
 }
