@@ -40,7 +40,7 @@ async function createSection (req,res){
 
 export default createSection;
 
-exports.updateSection = async (req,res){
+exports.updateSection = async (req,res)=>{
   try{
     //data input
     const {sectionName, sectionId} = req.body;
