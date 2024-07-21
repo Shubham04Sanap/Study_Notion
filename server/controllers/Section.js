@@ -1,5 +1,5 @@
-const Course = require("../models/course")
-const Section = require("../models/section")
+const Course = require("../models/Course")
+const Section = require("../models/Section")
 
 async function createSection (req,res){
   try{

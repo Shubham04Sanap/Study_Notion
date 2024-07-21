@@ -1,16 +1,18 @@
-const course = require("../models/course");
-const Course = require("../models/course")
-const User = require("../models/user")
+
+const Course = require("../models/Course")
+const User = require("../models/User")
+const Tag = require("../models/Tag")
+
 const {uploadImageToCloudinary} = require('../utils/imageUploader')
 
 //create course handler
 exports.createCourse = async(req,res)=>{
   try{
-    const {courseName, courseDescription, whatYouWillLearn, price} = req.body;
+    const {courseName, courseDescription, whatYouWillLearn, price, tag} = req.body;
 
     const thumbnail = req.files.thumbnailImage;
 
-    if(!courseDescription || !courseName || !whatYouWillLearn || !price || !thumbnail){
+    if(!courseDescription || !courseName || !whatYouWillLearn || !price || !thumbnail || !tag){
       return res.status(400).json({
         success:false,
         message:"All fields are required",
@@ -26,6 +28,14 @@ exports.createCourse = async(req,res)=>{
       })
     }
 
+    const tagDetails = await Tag.findById(tag)
+    if(!tagDetails){
+      return res.status(404).json({
+        success: false,
+        message: 'tag details not found'
+      })
+    }
+
     const thumbnailImage = await uploadImageToCloudinary(thumbnail,process.env.FOLDER_NAME);
 
     const newCourse = await Course.create({
@@ -34,6 +44,7 @@ exports.createCourse = async(req,res)=>{
       instructor: instructorDetails,
       price,
       whatYouWillLearn: whatYouWillLearn,
+      tag: tagDetails._id,
       thumbnail: thumbnailImage.secure_url,
     }) 
 

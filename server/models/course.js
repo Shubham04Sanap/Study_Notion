@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Tag = require("./Tag");
 
 const courseSchema = new mongoose.Schema({
   courseName: {
@@ -26,6 +27,11 @@ const courseSchema = new mongoose.Schema({
   ],
   price: {
     type:Number,
+  },
+  tag:{
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: Tag
   },
   thumbnail: {
     type:String,
